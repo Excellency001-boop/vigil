@@ -28,7 +28,7 @@ export default function ExecutionLog() {
     >
       <div className="max-h-[320px] overflow-y-auto">
         {events.length === 0 && (
-          <div className="px-4 py-8 text-center text-[13px] text-text-3">
+          <div className="px-4 py-8 text-center text-[14px] text-text-3">
             Nothing logged yet. Arm a rule, or run a fire drill.
           </div>
         )}
@@ -45,10 +45,10 @@ export default function ExecutionLog() {
 function Row({ e, isNew }: { e: LogEvent; isNew?: boolean }) {
   return (
     <div className={`flex items-start gap-3 px-4 py-2.5 ${isNew ? "log-new" : ""}`}>
-      <span className="mono mt-0.5 text-[10.5px] text-text-4 tabular-nums">{clock(e.at)}</span>
+      <span className="mono mt-0.5 text-[11.5px] text-text-4 tabular-nums">{clock(e.at)}</span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className={`text-[12.5px] font-medium ${LEVEL_COLOR[e.level] ?? "text-text"}`}>
+          <span className={`text-[13.5px] font-medium ${LEVEL_COLOR[e.level] ?? "text-text"}`}>
             {e.text}
           </span>
           {e.level === "chain" || e.real ? (
@@ -57,7 +57,7 @@ function Row({ e, isNew }: { e: LogEvent; isNew?: boolean }) {
             <Pill tone="muted">sim</Pill>
           ) : null}
         </div>
-        {e.sub && <div className="mt-0.5 text-[11.5px] leading-snug text-text-3">{e.sub}</div>}
+        {e.sub && <div className="mt-0.5 text-[12.5px] leading-snug text-text-3">{e.sub}</div>}
         {(e.sig || e.account) && (
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
             {e.sig && (
@@ -65,7 +65,7 @@ function Row({ e, isNew }: { e: LogEvent; isNew?: boolean }) {
                 href={`https://solscan.io/tx/${e.sig}`}
                 target="_blank"
                 rel="noreferrer"
-                className="mono inline-flex items-center gap-1 rounded border border-violet/30 bg-violet/10 px-1.5 py-0.5 text-[10.5px] text-violet hover:bg-violet/20"
+                className="mono inline-flex items-center gap-1 rounded border border-violet/30 bg-violet/10 px-1.5 py-0.5 text-[11.5px] text-violet hover:bg-violet/20"
               >
                 View on Solscan ↗
               </a>
@@ -75,7 +75,7 @@ function Row({ e, isNew }: { e: LogEvent; isNew?: boolean }) {
                 href={`https://solscan.io/account/${e.account}`}
                 target="_blank"
                 rel="noreferrer"
-                className="mono inline-flex items-center gap-1 text-[10.5px] text-text-4 hover:text-violet"
+                className="mono inline-flex items-center gap-1 text-[11.5px] text-text-4 hover:text-violet"
               >
                 order {shortAddr(e.account, 4)} ↗
               </a>

@@ -48,8 +48,8 @@ export default function TopBar() {
             <>
               <div className="h-6 w-px bg-line" />
               <div className="flex items-center gap-1.5" title="capital Vigil preserved this session">
-                <span className="mono text-[10px] text-text-3">PROTECTED</span>
-                <span className="num text-[12px] font-semibold text-live">{usd(protectedTotal)}</span>
+                <span className="mono text-[11px] text-text-3">PROTECTED</span>
+                <span className="num text-[13px] font-semibold text-live">{usd(protectedTotal)}</span>
               </div>
             </>
           )}
@@ -65,7 +65,7 @@ export default function TopBar() {
             </Btn>
           ) : demo ? (
             <div className="flex items-center gap-2">
-              <span className="mono text-[11px] text-amber">demo mode</span>
+              <span className="mono text-[12px] text-amber">demo mode</span>
               <Btn size="sm" onClick={() => setOpen((o) => !o)}>
                 Connect
               </Btn>
@@ -87,17 +87,17 @@ export default function TopBar() {
                     <div className="eyebrow">Connected</div>
                   </div>
                   <div className="rounded-lg bg-bg-inset px-2.5 py-2">
-                    <div className="mono break-all text-[11px] text-text-2">{address}</div>
+                    <div className="mono break-all text-[12px] text-text-2">{address}</div>
                   </div>
                   <button
                     onClick={() => {
                       disconnect();
                       setOpen(false);
                     }}
-                    className="mt-1 flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-[13px] text-danger hover:bg-danger/10"
+                    className="mt-1 flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-[14px] text-danger hover:bg-danger/10"
                   >
                     <span>Disconnect</span>
-                    <span className="mono text-[10px] text-danger/70">end session</span>
+                    <span className="mono text-[11px] text-danger/70">end session</span>
                   </button>
                 </>
               ) : (
@@ -118,10 +118,10 @@ export default function TopBar() {
                       connect(p);
                       setOpen(false);
                     }}
-                    className="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-[13px] text-text hover:bg-bg-inset disabled:opacity-40"
+                    className="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-[14px] text-text hover:bg-bg-inset disabled:opacity-40"
                   >
                     <span>{p}</span>
-                    <span className="mono text-[10px] text-text-3">
+                    <span className="mono text-[11px] text-text-3">
                       {has ? "detected" : mobile ? "open app" : "not found"}
                     </span>
                   </button>
@@ -133,13 +133,13 @@ export default function TopBar() {
                   enterDemo();
                   setOpen(false);
                 }}
-                className="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-[13px] text-live hover:bg-live/10"
+                className="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-[14px] text-live hover:bg-live/10"
               >
                 <span>Explore with demo wallet</span>
-                <span className="mono text-[10px] text-live/70">no wallet needed</span>
+                <span className="mono text-[11px] text-live/70">no wallet needed</span>
               </button>
               <div className="mt-1 rounded-lg border border-line bg-bg-sunken px-2.5 py-2">
-                <div className="text-[11px] leading-relaxed text-text-3">
+                <div className="text-[12px] leading-relaxed text-text-3">
                   Connecting only shares your public address. Vigil cannot move funds or sign anything
                   without your approval, and never holds your keys. A burner wallet is fine. Your
                   wallet may warn you on a first visit; that is standard for any new site.
@@ -170,11 +170,11 @@ function ClockChip({
     <div className="flex items-center gap-2">
       <Dot state={state} />
       <div className="leading-none">
-        <span className="mono text-[10px] text-text-3">{label} </span>
-        <span className={`mono text-[12px] font-semibold ${state === "live" ? "text-live" : "text-sleep"}`}>
+        <span className="mono text-[11px] text-text-3">{label} </span>
+        <span className={`mono text-[13px] font-semibold ${state === "live" ? "text-live" : "text-sleep"}`}>
           {value}
         </span>
-        {detail && <span className="mono ml-1 text-[10px] text-text-4">{detail}</span>}
+        {detail && <span className="mono ml-1 text-[11px] text-text-4">{detail}</span>}
       </div>
     </div>
   );

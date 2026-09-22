@@ -118,7 +118,7 @@ body {
 /* section eyebrow label, like a gauge caption */
 .eyebrow {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 10.5px;
+  font-size: 11.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-3);

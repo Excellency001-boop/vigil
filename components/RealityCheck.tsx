@@ -48,15 +48,15 @@ export default function RealityCheck() {
               )}
             </div>
             <div className="min-w-0">
-              <div className="text-[13px] font-semibold text-text">{r.what}</div>
-              <div className="mt-0.5 text-[12px] leading-relaxed text-text-3">{r.how}</div>
+              <div className="text-[14px] font-semibold text-text">{r.what}</div>
+              <div className="mt-0.5 text-[13px] leading-relaxed text-text-3">{r.how}</div>
             </div>
           </div>
         ))}
       </div>
       <div className="px-4 py-3 hair-t">
         <Eyebrow>The rule</Eyebrow>
-        <div className="mt-1 text-[12px] leading-relaxed text-text-2">
+        <div className="mt-1 text-[13px] leading-relaxed text-text-2">
           Simulated actions are labeled. Real actions carry a transaction signature you can open on
           Solana Explorer or Solscan. Vigil is non-custodial throughout: your wallet signs, the
           Jupiter keeper executes, and Vigil never holds your keys or your funds.

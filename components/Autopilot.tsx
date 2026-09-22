@@ -79,12 +79,12 @@ export default function Autopilot({ selected }: { selected: string }) {
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[13px] font-semibold text-text">{k.label}</span>
+                <span className="text-[14px] font-semibold text-text">{k.label}</span>
                 <Pill tone={k.rail === "onchain" ? "violet" : "amber"}>
                   {k.rail === "onchain" ? "on-chain" : "watch"}
                 </Pill>
               </div>
-              <div className="mt-0.5 text-[11px] text-text-3">{k.blurb}</div>
+              <div className="mt-0.5 text-[12px] text-text-3">{k.blurb}</div>
             </button>
           ))}
         </div>
@@ -127,7 +127,7 @@ export default function Autopilot({ selected }: { selected: string }) {
                 />
                 <span className="num w-16 text-right text-[14px] text-text">{trailPct}%</span>
               </div>
-              <div className="mono mt-1 text-[11px] text-text-3">
+              <div className="mono mt-1 text-[12px] text-text-3">
                 peak {usd(price)} → sells near {usd(price ? price * (1 - trailPct / 100) : null)}
               </div>
             </Field>
@@ -163,7 +163,7 @@ export default function Autopilot({ selected }: { selected: string }) {
                     <button
                       key={c}
                       onClick={() => setPayWith(c)}
-                      className={`rounded px-2 py-0.5 text-[11px] font-medium transition-colors ${
+                      className={`rounded px-2 py-0.5 text-[12px] font-medium transition-colors ${
                         payWith === c ? "bg-live/20 text-live" : "text-text-3 hover:text-text"
                       }`}
                     >
@@ -172,7 +172,7 @@ export default function Autopilot({ selected }: { selected: string }) {
                   ))}
                 </div>
               </div>
-              <div className="mono mt-1.5 text-[11px] text-text-3">
+              <div className="mono mt-1.5 text-[12px] text-text-3">
                 rests on-chain until {selected} hits ${trigger}
                 {payWith === "SOL" && solAmt ? ` · from ~${solAmt.toFixed(4)} SOL` : ""}
                 {usdcAmount < 5 ? <span className="text-amber"> · $5 minimum on-chain</span> : ""}
@@ -182,7 +182,7 @@ export default function Autopilot({ selected }: { selected: string }) {
         </div>
 
         {/* rail explainer + submit */}
-        <div className="mt-4 rounded-lg border border-line bg-bg-sunken p-3 text-[12px] leading-relaxed text-text-2">
+        <div className="mt-4 rounded-lg border border-line bg-bg-sunken p-3 text-[13px] leading-relaxed text-text-2">
           {rail === "onchain" ? (
             <>
               <span className="text-violet font-medium">On-chain order.</span> Rests on Solana. Your
@@ -194,7 +194,7 @@ export default function Autopilot({ selected }: { selected: string }) {
               <span className="text-amber font-medium">Vigil watch.</span> A stop below market is not a
               limit order. Vigil reads the live feed and sells the instant your floor breaks.
               <div className="mt-2.5 flex items-center justify-between gap-2 border-t border-line pt-2.5">
-                <span className="text-[11.5px] text-text-3">
+                <span className="text-[12.5px] text-text-3">
                   {delegated ? (
                     <span className="text-live">Hands-free on · capped allowance granted</span>
                   ) : (
@@ -241,17 +241,17 @@ export default function Autopilot({ selected }: { selected: string }) {
               <span className={`text-[14px] ${lastTrade.ok ? "text-live" : "text-danger"}`}>
                 {lastTrade.ok ? "✓" : "✕"}
               </span>
-              <span className="text-[13px] font-semibold text-text">{lastTrade.text}</span>
+              <span className="text-[14px] font-semibold text-text">{lastTrade.text}</span>
             </div>
             {lastTrade.sub && (
-              <div className="mt-1 text-[11.5px] leading-snug text-text-3">{lastTrade.sub}</div>
+              <div className="mt-1 text-[12.5px] leading-snug text-text-3">{lastTrade.sub}</div>
             )}
             {lastTrade.sig && (
               <a
                 href={`https://explorer.solana.com/tx/${lastTrade.sig}`}
                 target="_blank"
                 rel="noreferrer"
-                className="mono mt-2 inline-flex items-center gap-1 rounded border border-violet/40 bg-violet/10 px-2 py-1 text-[11px] text-violet hover:bg-violet/20"
+                className="mono mt-2 inline-flex items-center gap-1 rounded border border-violet/40 bg-violet/10 px-2 py-1 text-[12px] text-violet hover:bg-violet/20"
               >
                 View on Solana Explorer ↗ {shortAddr(lastTrade.sig, 4)}
               </a>
@@ -303,8 +303,8 @@ function ArmedList() {
             <div key={r.id} className="px-4 py-3">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-[13.5px] font-semibold text-text">{r.symbol}</span>
-                  <span className="text-[12px] text-text-3">{KIND_LABEL[r.kind]}</span>
+                  <span className="text-[14.5px] font-semibold text-text">{r.symbol}</span>
+                  <span className="text-[13px] text-text-3">{KIND_LABEL[r.kind]}</span>
                   <Pill tone={r.mode === "guard" && r.orderRef ? "violet" : "amber"}>
                     {r.orderRef ? "on-chain" : "watch"}
                   </Pill>
@@ -321,7 +321,7 @@ function ArmedList() {
               </div>
 
               <div className="mt-1.5 flex items-center justify-between">
-                <div className="mono text-[11.5px] text-text-3">
+                <div className="mono text-[12.5px] text-text-3">
                   {trg ? `trigger ${usd(trg)}` : ""}{" "}
                   {ev.distancePct !== null && !fired && (
                     <span className={near ? "text-danger" : "text-text-3"}>
@@ -342,7 +342,7 @@ function ArmedList() {
                 )}
               </div>
               {!fired && (
-                <div className="mt-1 text-[11.5px] text-text-3">
+                <div className="mt-1 text-[12.5px] text-text-3">
                   {isDormant ? "Night Watch: stands down until NYSE closes" : ev.reason}
                 </div>
               )}

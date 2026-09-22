@@ -48,7 +48,7 @@ export default function NightWatch() {
 
       <div className="px-4 py-3">
         {!nightWatch ? (
-          <div className="flex items-center gap-2 text-[12.5px] text-text-3">
+          <div className="flex items-center gap-2 text-[13.5px] text-text-3">
             <Dot state="live" />
             Rules run around the clock. Flip this to have them stand watch only during the hours a
             broker is dark.
@@ -61,7 +61,7 @@ export default function NightWatch() {
                 Night Watch active. Rules are live.
               </span>
             </div>
-            <div className="mono mt-1.5 text-[11.5px] text-text-3">
+            <div className="mono mt-1.5 text-[12.5px] text-text-3">
               NYSE is dark · {governed} rule{governed === 1 ? "" : "s"} on watch · stands down when it
               reopens in {countdown(secsToOpen)}
             </div>
@@ -71,9 +71,9 @@ export default function NightWatch() {
             <div className="flex items-center gap-2">
               <Dot state="sleep" />
               <span className="num text-[15px] font-semibold text-amber">DORMANT</span>
-              <span className="text-[12.5px] text-text-2">NYSE is open. Rules are standing down.</span>
+              <span className="text-[13.5px] text-text-2">NYSE is open. Rules are standing down.</span>
             </div>
-            <div className="mono mt-1.5 text-[11.5px] text-text-3">
+            <div className="mono mt-1.5 text-[12.5px] text-text-3">
               wakes when NYSE closes in {countdown(secsToClose)}
             </div>
           </div>

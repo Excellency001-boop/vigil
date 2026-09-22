@@ -41,7 +41,7 @@ export default function Portfolio() {
         <div className="bg-bg-raised px-4 py-3">
           <Eyebrow>Guarded by Vigil</Eyebrow>
           <div className="num mt-0.5 text-[15px] text-live">
-            {coverage.toFixed(0)}% <span className="text-text-3 text-[12px]">of equity</span>
+            {coverage.toFixed(0)}% <span className="text-text-3 text-[13px]">of equity</span>
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-bg-inset">
             <div
@@ -66,7 +66,7 @@ export default function Portfolio() {
 
       <div className="divide-y divide-line">
         {positions.length === 0 && (
-          <div className="px-4 py-8 text-center text-[13px] text-text-3">
+          <div className="px-4 py-8 text-center text-[14px] text-text-3">
             No xStock holdings found. Load the demo wallet to explore.
           </div>
         )}
@@ -85,13 +85,13 @@ export default function Portfolio() {
                     <Pill tone="danger">exposed</Pill>
                   )}
                 </div>
-                <div className="num mt-0.5 text-[11.5px] text-text-3">
+                <div className="num mt-0.5 text-[12.5px] text-text-3">
                   {p.amount.toLocaleString("en-US", { maximumFractionDigits: 3 })} @ {usd(p.onchainUsd)}
                 </div>
               </div>
               <div className="text-right">
                 <div className="num text-[14px] text-text">{usd(p.valueUsd)}</div>
-                <div className={`num text-[11.5px] ${up ? "tick-up" : "tick-down"}`}>
+                <div className={`num text-[12.5px] ${up ? "tick-up" : "tick-down"}`}>
                   {pct(p.change24hPct)}
                 </div>
               </div>

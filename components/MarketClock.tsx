@@ -33,7 +33,7 @@ export default function MarketClock() {
             <br />
             <span className="text-live">Your xStocks don&rsquo;t.</span>
           </h1>
-          <p className="mt-3 max-w-md text-[13.5px] leading-relaxed text-text-2">
+          <p className="mt-3 max-w-md text-[14.5px] leading-relaxed text-text-2">
             A stop-loss on a real share dies at the closing bell. The tokenized version keeps
             trading all night on Solana. Vigil holds the trigger the whole time your broker is
             dark.
@@ -51,7 +51,7 @@ export default function MarketClock() {
                 <div className="num mt-1 text-4xl font-semibold text-amber">
                   {countdown(secsToClose)}
                 </div>
-                <div className="mt-1 text-[13px] text-text-2">
+                <div className="mt-1 text-[14px] text-text-2">
                   After the bell, nothing on Wall Street watches your position until it reopens.
                   Vigil does.
                 </div>
@@ -62,14 +62,14 @@ export default function MarketClock() {
                 <div className="num mt-1 text-4xl font-semibold text-amber">
                   {countdown(secsToOpen)}
                 </div>
-                <div className="mt-1 text-[13px] text-text-2">
+                <div className="mt-1 text-[14px] text-text-2">
                   until the bell. Your broker cannot touch your position. Vigil can, right now.
                 </div>
               </>
             )}
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-2 text-[12px] text-text-3">
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px] text-text-3">
             <Pill tone="sleep">NYSE dark {CLOSED_PCT}% of the week</Pill>
             <Pill tone="live">xStocks trade 168h/week</Pill>
             {clock?.equityFeed && (

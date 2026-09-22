@@ -29,7 +29,7 @@ export default function Drill({ selected }: { selected: string }) {
       right={drill ? <Pill tone="danger">drill live · {drill.symbol}</Pill> : <Pill tone="muted">idle</Pill>}
     >
       <div className="p-4">
-        <p className="text-[12.5px] leading-relaxed text-text-2">
+        <p className="text-[13.5px] leading-relaxed text-text-2">
           Your armed guards already read the live feed every second. This pushes a controlled price
           path through the <span className="font-semibold text-text">exact same engine</span>, so you
           can see the response now instead of waiting for a real move on{" "}
@@ -37,13 +37,13 @@ export default function Drill({ selected }: { selected: string }) {
         </p>
 
         {dormant && (
-          <p className="mt-2 text-[11.5px] text-amber">
+          <p className="mt-2 text-[12.5px] text-amber">
             Night Watch is dormant while NYSE is open, so watch rules are standing down. Turn it off
             to drill right now.
           </p>
         )}
         {!dormant && !armedWatch && (
-          <p className="mt-2 text-[11.5px] text-amber">
+          <p className="mt-2 text-[12.5px] text-amber">
             Arm a stop loss or trailing stop first, then the drill has something to trip.
           </p>
         )}
@@ -68,7 +68,7 @@ export default function Drill({ selected }: { selected: string }) {
         {viewingDemo && (
           <button
             onClick={() => resetDemo()}
-            className="mt-3 w-full text-[11.5px] text-text-3 hover:text-text"
+            className="mt-3 w-full text-[12.5px] text-text-3 hover:text-text"
           >
             reset demo book &amp; clear rules
           </button>
@@ -87,14 +87,14 @@ function PreservedCard() {
       <div className="flex items-center justify-between px-3.5 py-2.5 hair-b border-live/20">
         <div className="flex items-center gap-2">
           <span className="dot dot-live" />
-          <span className="text-[13px] font-semibold text-text">Guard fired · {e.symbol}</span>
+          <span className="text-[14px] font-semibold text-text">Guard fired · {e.symbol}</span>
         </div>
-        <span className="mono text-[10.5px] text-text-3">
+        <span className="mono text-[11.5px] text-text-3">
           {new Date(e.at).toLocaleTimeString("en-US", { hour12: false })}
         </span>
       </div>
       <div className="px-3.5 py-3">
-        <div className="grid grid-cols-2 gap-y-2 text-[12px]">
+        <div className="grid grid-cols-2 gap-y-2 text-[13px]">
           <span className="text-text-3">Sold</span>
           <span className="num text-right text-text">
             {e.soldQty.toFixed(2)} {e.symbol} @ {usd(e.soldAt)}
@@ -113,13 +113,13 @@ function PreservedCard() {
             {usd(e.preserved)}
           </div>
           {protectedTotal > e.preserved + 0.01 && (
-            <div className="mono mt-1.5 text-[11px] text-text-3">
+            <div className="mono mt-1.5 text-[12px] text-text-3">
               protected this session · <span className="text-live">{usd(protectedTotal)}</span>
             </div>
           )}
         </div>
         {!e.nyseOpen && (
-          <p className="mt-2.5 text-center text-[11.5px] leading-snug text-text-3">
+          <p className="mt-2.5 text-center text-[12.5px] leading-snug text-text-3">
             NYSE was closed. A broker stop could not have fired. Vigil did.
           </p>
         )}

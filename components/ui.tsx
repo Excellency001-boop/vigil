@@ -29,7 +29,7 @@ export function Pill({
   };
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-[11px] font-medium mono ${tones[tone]} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-[12px] font-medium mono ${tones[tone]} ${className}`}
     >
       {children}
     </span>
@@ -62,8 +62,8 @@ export function Btn({
     violet: "bg-violet/15 border-violet/40 text-violet hover:bg-violet/25",
   };
   const sizes: Record<string, string> = {
-    sm: "px-2.5 py-1 text-[12px]",
-    md: "px-3.5 py-2 text-[13px]",
+    sm: "px-2.5 py-1 text-[13px]",
+    md: "px-3.5 py-2 text-[14px]",
   };
   return (
     <button
@@ -93,7 +93,7 @@ export function Stat({
     <div>
       <Eyebrow>{label}</Eyebrow>
       <div className={`num mt-1 text-2xl ${vt}`}>{value}</div>
-      {sub && <div className="mt-0.5 text-[12px] text-text-3">{sub}</div>}
+      {sub && <div className="mt-0.5 text-[13px] text-text-3">{sub}</div>}
     </div>
   );
 }
@@ -130,7 +130,7 @@ export function Panel({
 export function TickerLogo({ under }: { under: string }) {
   // A compact monogram tile in place of external logos (CSP-safe, no fetch).
   return (
-    <span className="flex h-7 w-7 flex-none items-center justify-center rounded-md border border-line-strong bg-bg-inset text-[10px] font-bold text-text-2 mono">
+    <span className="flex h-7 w-7 flex-none items-center justify-center rounded-md border border-line-strong bg-bg-inset text-[11px] font-bold text-text-2 mono">
       {under.slice(0, 3)}
     </span>
   );

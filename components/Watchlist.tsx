@@ -48,7 +48,7 @@ export default function Watchlist({
 
       <div className="max-h-[360px] overflow-y-auto divide-y divide-line">
         {loading && quotes.length === 0 && (
-          <div className="px-4 py-8 text-center text-[13px] text-text-3">Loading live feeds…</div>
+          <div className="px-4 py-8 text-center text-[14px] text-text-3">Loading live feeds…</div>
         )}
         {quotes.map((q) => {
           const up = (q.change24hPct ?? 0) >= 0;
@@ -70,26 +70,26 @@ export default function Watchlist({
                 <TickerLogo under={q.under} />
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[13.5px] font-semibold text-text">{q.symbol}</span>
+                    <span className="text-[14.5px] font-semibold text-text">{q.symbol}</span>
                     {isGuarded && (
                       <span title="guarded by Vigil">
                         <Dot state="live" />
                       </span>
                     )}
                   </div>
-                  <div className="truncate text-[11px] text-text-3">{q.name}</div>
+                  <div className="truncate text-[12px] text-text-3">{q.name}</div>
                 </div>
               </div>
 
               <div>
-                <div className={`num text-[13.5px] text-text ${flash}`}>{usd(price)}</div>
-                <div className="mono text-[10px] text-text-4">{feedShort(q.pythCrypto)}</div>
+                <div className={`num text-[14.5px] text-text ${flash}`}>{usd(price)}</div>
+                <div className="mono text-[11px] text-text-4">{feedShort(q.pythCrypto)}</div>
               </div>
 
               <div>
-                <div className="num text-[12.5px] text-text-2">{usd(q.equityUsd)}</div>
+                <div className="num text-[13.5px] text-text-2">{usd(q.equityUsd)}</div>
                 <div
-                  className={`num text-[11px] ${
+                  className={`num text-[12px] ${
                     Math.abs(prem) < 0.05 ? "text-text-3" : prem >= 0 ? "tick-up" : "tick-down"
                   }`}
                 >
@@ -98,10 +98,10 @@ export default function Watchlist({
                 </div>
               </div>
 
-              <div className={`num text-[13px] ${up ? "tick-up" : "tick-down"}`}>{pct(q.change24hPct)}</div>
+              <div className={`num text-[14px] ${up ? "tick-up" : "tick-down"}`}>{pct(q.change24hPct)}</div>
 
               <div className="col-span-2 flex items-center justify-end gap-2 sm:col-span-1">
-                <span className="mono hidden text-[10px] text-text-4 md:inline">
+                <span className="mono hidden text-[11px] text-text-4 md:inline">
                   liq {compact(q.liquidityUsd)}
                 </span>
                 <Btn size="sm" tone={isSel ? "live" : "default"} onClick={() => onSelect(q.symbol)}>

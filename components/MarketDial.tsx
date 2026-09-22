@@ -116,16 +116,16 @@ export default function MarketDial() {
           <div className="eyebrow">{nyseOpen ? "NYSE open" : "NYSE dark"}</div>
           {nyseOpen ? (
             <>
-              <div className="num text-[13px] font-semibold text-amber">{countdown(secsToClose)}</div>
-              <div className="mono text-[9px] text-text-3">to the bell</div>
+              <div className="num text-[14px] font-semibold text-amber">{countdown(secsToClose)}</div>
+              <div className="mono text-[10px] text-text-3">to the bell</div>
             </>
           ) : (
             <>
               <div className="num text-[15px] font-semibold text-text">{countdown(secsToOpen)}</div>
-              <div className="mono text-[9px] text-text-3">to reopen</div>
+              <div className="mono text-[10px] text-text-3">to reopen</div>
             </>
           )}
-          <div className="mono mt-1.5 flex items-center gap-1 text-[9px] text-live">
+          <div className="mono mt-1.5 flex items-center gap-1 text-[10px] text-live">
             <span className="dot dot-live" style={{ width: 5, height: 5 }} />
             Solana 24/7
           </div>
@@ -133,7 +133,7 @@ export default function MarketDial() {
       </div>
 
       {/* legend */}
-      <div className="mt-3 flex items-center gap-4 text-[10.5px] text-text-3">
+      <div className="mt-3 flex items-center gap-4 text-[11.5px] text-text-3">
         <span className="flex items-center gap-1.5">
           <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--live)", opacity: 0.5 }} />
           xStocks trade all week
@@ -143,7 +143,7 @@ export default function MarketDial() {
           NYSE open hours
         </span>
       </div>
-      <div className="mono mt-1 text-[9px] text-text-4">Pyth market hours · regular session shown</div>
+      <div className="mono mt-1 text-[10px] text-text-4">Pyth market hours · regular session shown</div>
     </div>
   );
 }

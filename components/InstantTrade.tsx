@@ -51,7 +51,7 @@ export default function InstantTrade({
         <div className="grid grid-cols-2 gap-1 rounded-lg border border-line-strong bg-bg-inset p-1">
           <button
             onClick={() => setSide("buy")}
-            className={`rounded-md py-1.5 text-[13px] font-medium transition-colors ${
+            className={`rounded-md py-1.5 text-[14px] font-medium transition-colors ${
               side === "buy" ? "bg-live/20 text-live" : "text-text-3 hover:text-text"
             }`}
           >
@@ -59,7 +59,7 @@ export default function InstantTrade({
           </button>
           <button
             onClick={() => setSide("sell")}
-            className={`rounded-md py-1.5 text-[13px] font-medium transition-colors ${
+            className={`rounded-md py-1.5 text-[14px] font-medium transition-colors ${
               side === "sell" ? "bg-danger/20 text-danger" : "text-text-3 hover:text-text"
             }`}
           >
@@ -81,7 +81,7 @@ export default function InstantTrade({
                 </option>
               ))}
             </select>
-            <span className="mono text-[10px] text-text-3">live</span>
+            <span className="mono text-[11px] text-text-3">live</span>
           </div>
           <span className="num text-[15px] text-text">{usd(price)}</span>
         </div>
@@ -95,7 +95,7 @@ export default function InstantTrade({
                   <button
                     key={c}
                     onClick={() => setPayWith(c)}
-                    className={`rounded px-2 py-0.5 text-[11px] font-medium transition-colors ${
+                    className={`rounded px-2 py-0.5 text-[12px] font-medium transition-colors ${
                       payWith === c ? "bg-live/20 text-live" : "text-text-3 hover:text-text"
                     }`}
                   >
@@ -121,7 +121,7 @@ export default function InstantTrade({
                 </Btn>
               ))}
             </div>
-            <div className="mono mt-2 text-[11.5px] text-text-3">
+            <div className="mono mt-2 text-[12.5px] text-text-3">
               ≈ {num(buyQty, 4)} {selected}
               {payWith === "SOL" && solAmt ? ` · from ~${num(solAmt, 4)} SOL` : ""}
             </div>
@@ -138,7 +138,7 @@ export default function InstantTrade({
           <div className="mt-4">
             <div className="flex items-center justify-between">
               <Eyebrow>Sell {selected}</Eyebrow>
-              <span className="mono text-[11px] text-text-3">
+              <span className="mono text-[12px] text-text-3">
                 hold {num(posQty, 3)} · {usd(posValue)}
               </span>
             </div>
@@ -149,7 +149,7 @@ export default function InstantTrade({
                 </Btn>
               ))}
             </div>
-            <div className="mono mt-2 text-[11.5px] text-text-3">
+            <div className="mono mt-2 text-[12.5px] text-text-3">
               sell {num(sellQty, 4)} {selected} ≈ {usd(sellProceeds)}
             </div>
             <Btn
@@ -173,29 +173,29 @@ export default function InstantTrade({
               <span className={`text-[14px] ${lastTrade.ok ? "text-live" : "text-danger"}`}>
                 {lastTrade.ok ? "✓" : "✕"}
               </span>
-              <span className="text-[13px] font-semibold text-text">{lastTrade.text}</span>
+              <span className="text-[14px] font-semibold text-text">{lastTrade.text}</span>
             </div>
             {lastTrade.sub && (
-              <div className="mt-1 text-[11.5px] leading-snug text-text-3">{lastTrade.sub}</div>
+              <div className="mt-1 text-[12.5px] leading-snug text-text-3">{lastTrade.sub}</div>
             )}
             {lastTrade.sig ? (
               <a
                 href={`https://explorer.solana.com/tx/${lastTrade.sig}`}
                 target="_blank"
                 rel="noreferrer"
-                className="mono mt-2 inline-flex items-center gap-1 rounded border border-violet/40 bg-violet/10 px-2 py-1 text-[11px] text-violet hover:bg-violet/20"
+                className="mono mt-2 inline-flex items-center gap-1 rounded border border-violet/40 bg-violet/10 px-2 py-1 text-[12px] text-violet hover:bg-violet/20"
               >
                 View on Solana Explorer ↗ {shortAddr(lastTrade.sig, 4)}
               </a>
             ) : (
               !lastTrade.ok && (
-                <div className="mt-1.5 text-[11px] text-text-4">Nothing was sent. Fix the above and try again.</div>
+                <div className="mt-1.5 text-[12px] text-text-4">Nothing was sent. Fix the above and try again.</div>
               )
             )}
           </div>
         )}
 
-        <div className="mt-3 text-[11px] leading-relaxed text-text-3">
+        <div className="mt-3 text-[12px] leading-relaxed text-text-3">
           {real ? (
             <>Routed by Jupiter, signed by your wallet. Pay with USDC or SOL. Keep a little SOL in the wallet for the network fee either way.</>
           ) : (
