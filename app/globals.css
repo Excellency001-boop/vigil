@@ -1,26 +1,240 @@
 @import "tailwindcss";
 
+/*
+  VIGIL — a night-watch instrument for tokenized stocks.
+  Design POV: mission-control telemetry panel, not a centered glow hero.
+  Near-black base. Emerald = awake / live / Solana. Slate = asleep / TradFi closed.
+  Amber = armed & watching. Red = breach / loss. Mono for every number.
+*/
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  --bg: #06070a;
+  --bg-raised: #0b0d13;
+  --bg-sunken: #040509;
+  --bg-inset: #0f1219;
+
+  --line: #171a22;
+  --line-strong: #232735;
+  --hair: #101219;
+
+  --text: #e8eaf0;
+  --text-2: #9aa1b1;
+  --text-3: #5c6474;
+  --text-4: #3a404e;
+
+  --live: #35e0a1;      /* awake, Solana, gains */
+  --live-dim: #1b8a66;
+  --live-deep: #0e5f47;
+  --amber: #f6a723;     /* armed, watching */
+  --danger: #ff5d5d;    /* breach, loss */
+  --sleep: #59637a;     /* TradFi closed */
+  --sleep-deep: #2a3145;
+  --violet: #8b8bff;    /* execution / non-custodial rail */
+
+  --background: var(--bg);
+  --foreground: var(--text);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-bg-sunken: var(--bg-sunken);
+  --color-bg-inset: var(--bg-inset);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-hair: var(--hair);
+
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-text-4: var(--text-4);
+
+  --color-live: var(--live);
+  --color-live-dim: var(--live-dim);
+  --color-live-deep: var(--live-deep);
+  --color-amber: var(--amber);
+  --color-danger: var(--danger);
+  --color-sleep: var(--sleep);
+  --color-sleep-deep: var(--sleep-deep);
+  --color-violet: var(--violet);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--line);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* faint instrument grid + a warm horizon glow low on the panel */
+  background-image:
+    linear-gradient(to bottom, rgba(53, 224, 161, 0.03), transparent 22%),
+    linear-gradient(var(--hair) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hair) 1px, transparent 1px);
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+  background-position: 0 0, 0 0, 0 0;
+}
+
+/* ---- numerics ---- */
+.num {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+/* ---- panels / instrument surfaces ---- */
+.panel {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.panel-sunken {
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+}
+.hair-b {
+  border-bottom: 1px solid var(--line);
+}
+.hair-t {
+  border-top: 1px solid var(--line);
+}
+
+/* section eyebrow label, like a gauge caption */
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* ---- status dot ---- */
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  display: inline-block;
+  flex: none;
+}
+.dot-live {
+  background: var(--live);
+  box-shadow: 0 0 0 0 rgba(53, 224, 161, 0.55);
+  animation: pulse-live 2.4s ease-out infinite;
+}
+.dot-sleep {
+  background: var(--sleep);
+}
+.dot-armed {
+  background: var(--amber);
+  box-shadow: 0 0 0 0 rgba(246, 167, 35, 0.5);
+  animation: pulse-armed 2.6s ease-out infinite;
+}
+
+@keyframes pulse-live {
+  0% { box-shadow: 0 0 0 0 rgba(53, 224, 161, 0.5); }
+  70% { box-shadow: 0 0 0 7px rgba(53, 224, 161, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(53, 224, 161, 0); }
+}
+@keyframes pulse-armed {
+  0% { box-shadow: 0 0 0 0 rgba(246, 167, 35, 0.45); }
+  70% { box-shadow: 0 0 0 7px rgba(246, 167, 35, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(246, 167, 35, 0); }
+}
+
+/* scan sweep for the "watching" state */
+@keyframes sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(320%); }
+}
+.sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(53, 224, 161, 0.10), transparent);
+  transform: translateX(-100%);
+  animation: sweep 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* value tickers */
+.tick-up { color: var(--live); }
+.tick-down { color: var(--danger); }
+
+/* price under a fire drill: pulse so the shock is felt, not just read */
+@keyframes flash-down {
+  0%, 100% { color: var(--danger); text-shadow: 0 0 0 transparent; }
+  50% { color: #ff8f8f; text-shadow: 0 0 14px rgba(255, 93, 93, 0.55); }
+}
+@keyframes flash-up {
+  0%, 100% { color: var(--live); text-shadow: 0 0 0 transparent; }
+  50% { color: #7cf3c8; text-shadow: 0 0 14px rgba(53, 224, 161, 0.5); }
+}
+.price-flash-down { animation: flash-down 0.7s ease-in-out infinite; font-weight: 600; }
+.price-flash-up { animation: flash-up 0.7s ease-in-out infinite; font-weight: 600; }
+
+/* newest log row slides in, like a line printing on a flight recorder */
+@keyframes log-in {
+  from { opacity: 0; transform: translateY(-4px); background: rgba(53, 224, 161, 0.06); }
+  to { opacity: 1; transform: translateY(0); background: transparent; }
+}
+.log-new { animation: log-in 0.5s ease-out; }
+
+/* subtle glow chip */
+.chip {
+  border: 1px solid var(--line-strong);
+  background: var(--bg-inset);
+  border-radius: 8px;
+}
+
+/* focus rings for controls */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid rgba(53, 224, 161, 0.5);
+  outline-offset: 1px;
+}
+
+::selection {
+  background: rgba(53, 224, 161, 0.25);
+  color: #fff;
+}
+
+/* thin scrollbars */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* range input styled as a threshold slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: var(--line-strong);
+  border-radius: 999px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 999px;
+  background: var(--live);
+  border: 2px solid #04160f;
+  cursor: pointer;
 }
