@@ -1,42 +1,96 @@
-import { VersionedTransaction } from "@solana/web3.js";
+import { getWallets } from "@wallet-standard/app";
+import bs58 from "bs58";
 
-// Lean wallet layer over injected Solana providers (Phantom, Solflare,
-// Backpack). No adapter library, no SSR provider wrapping, no peer-dep drama.
-// Vigil only ever asks the wallet to sign; it never sees a key.
-
-export type ProviderName = "Phantom" | "Solflare" | "Backpack";
-
-type Injected = {
-  publicKey?: { toString(): string };
-  isPhantom?: boolean;
-  isSolflare?: boolean;
-  isBackpack?: boolean;
-  connect: (opts?: { onlyIfTrusted?: boolean }) => Promise<{ publicKey: { toString(): string } }>;
-  disconnect: () => Promise<void>;
-  signAndSendTransaction: (tx: VersionedTransaction) => Promise<{ signature: string }>;
-};
+// Solana Wallet Standard. Every Solana wallet the person has installed (Phantom,
+// Solflare, Backpack, Coinbase, Trust, Glow, and more) announces itself here with
+// its real name and icon. We list them all, no hardcoding.
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-function win(): any {
-  return typeof window === "undefined" ? {} : (window as any);
+
+export type SolWallet = { name: string; icon: string };
+
+const SOLANA_CHAIN = "solana:mainnet";
+
+function isSolana(w: any): boolean {
+  const feats = w?.features || {};
+  const chains = w?.chains || [];
+  return (
+    "solana:signAndSendTransaction" in feats ||
+    "solana:signTransaction" in feats ||
+    (Array.isArray(chains) && chains.some((c: string) => typeof c === "string" && c.startsWith("solana:")))
+  );
 }
 
-export function getProvider(name: ProviderName): Injected | null {
-  const w = win();
-  switch (name) {
-    case "Phantom":
-      return w.phantom?.solana ?? (w.solana?.isPhantom ? w.solana : null);
-    case "Solflare":
-      return w.solflare ?? (w.solana?.isSolflare ? w.solana : null);
-    case "Backpack":
-      return w.backpack ?? w.xnft?.solana ?? null;
-    default:
-      return null;
+function rawWallets(): any[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return getWallets().get().filter(isSolana);
+  } catch {
+    return [];
   }
 }
 
-export function detectProviders(): ProviderName[] {
-  return (["Phantom", "Solflare", "Backpack"] as ProviderName[]).filter((n) => !!getProvider(n));
+export function getSolanaWallets(): SolWallet[] {
+  return rawWallets().map((w) => ({ name: w.name, icon: w.icon }));
+}
+
+// Wallets can register a moment after load; re-read when the registry changes.
+export function onWalletsChange(cb: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  try {
+    const { on } = getWallets();
+    const a = on("register", cb);
+    const b = on("unregister", cb);
+    return () => {
+      a();
+      b();
+    };
+  } catch {
+    return () => {};
+  }
+}
+
+let current: { wallet: any; account: any } | null = null;
+
+export async function connectWallet(name: string): Promise<string> {
+  const w = rawWallets().find((x) => x.name === name);
+  if (!w) throw new Error(`${name} not found`);
+  const feat = w.features["standard:connect"];
+  if (!feat) throw new Error(`${name} cannot connect`);
+  const { accounts } = await feat.connect();
+  const account = accounts?.[0] || w.accounts?.[0];
+  if (!account) throw new Error(`${name} returned no account`);
+  current = { wallet: w, account };
+  return account.address as string;
+}
+
+export async function disconnectWallet(): Promise<void> {
+  const w = current?.wallet;
+  current = null;
+  const feat = w?.features?.["standard:disconnect"];
+  if (feat) {
+    try {
+      await feat.disconnect();
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
+// Jupiter hands us a base64 serialized transaction. The Wallet Standard feature
+// takes those raw bytes, the wallet signs and sends, and returns the signature.
+export async function signAndSend(base64Tx: string): Promise<string> {
+  if (!current) throw new Error("No wallet connected");
+  const bytes = Uint8Array.from(atob(base64Tx), (c) => c.charCodeAt(0));
+  const feat = current.wallet.features["solana:signAndSendTransaction"];
+  if (!feat) throw new Error(`${current.wallet.name} does not support send`);
+  const out = await feat.signAndSendTransaction({
+    account: current.account,
+    transaction: bytes,
+    chain: SOLANA_CHAIN,
+  });
+  const sig = Array.isArray(out) ? out[0]?.signature : (out as any)?.signature;
+  return bs58.encode(sig);
 }
 
 export function isMobile(): boolean {
@@ -44,57 +98,14 @@ export function isMobile(): boolean {
   return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 }
 
-// On a phone's normal browser the wallet is not injected. These universal links
-// open the wallet app and load the current page inside the wallet's own browser,
-// where the provider IS injected and connect() works. No-op on desktop.
-export function walletDeepLink(name: ProviderName): string | null {
-  if (typeof window === "undefined") return null;
+// On a phone's normal browser no wallet is injected; these universal links open
+// the dapp inside the wallet's own browser where it does register.
+export function mobileWallets(): { name: string; link: string }[] {
+  if (typeof window === "undefined") return [];
   const url = encodeURIComponent(window.location.href);
   const ref = encodeURIComponent(window.location.origin);
-  switch (name) {
-    case "Phantom":
-      return `https://phantom.app/ul/browse/${url}?ref=${ref}`;
-    case "Solflare":
-      return `https://solflare.com/ul/v1/browse/${url}?ref=${ref}`;
-    case "Backpack":
-      return `https://backpack.app/ul/browse/${url}?ref=${ref}`;
-    default:
-      return null;
-  }
-}
-
-export async function connectWallet(name: ProviderName): Promise<string> {
-  const p = getProvider(name);
-  if (!p) throw new Error(`${name} not found`);
-  const res = await p.connect();
-  return res.publicKey.toString();
-}
-
-export async function disconnectWallet(name: ProviderName): Promise<void> {
-  const p = getProvider(name);
-  try {
-    await p?.disconnect();
-  } catch {
-    /* ignore */
-  }
-}
-
-// Deserialize a base64 tx from Jupiter, have the wallet sign + send it.
-export async function signAndSend(name: ProviderName, base64Tx: string): Promise<string> {
-  const p = getProvider(name);
-  if (!p) throw new Error(`${name} not connected`);
-  const raw = Uint8Array.from(atob(base64Tx), (c) => c.charCodeAt(0));
-  const tx = VersionedTransaction.deserialize(raw);
-  const { signature } = await p.signAndSendTransaction(tx);
-  return signature;
-}
-
-// Serialize a signed tx back to base64 (for Jupiter's /execute lander). Only
-// used when we need Jupiter to broadcast; the injected sign+send path above
-// already lands most transactions directly.
-export function encodeTx(tx: VersionedTransaction): string {
-  const raw = tx.serialize();
-  let bin = "";
-  for (let i = 0; i < raw.length; i++) bin += String.fromCharCode(raw[i]);
-  return btoa(bin);
+  return [
+    { name: "Phantom", link: `https://phantom.app/ul/browse/${url}?ref=${ref}` },
+    { name: "Solflare", link: `https://solflare.com/ul/v1/browse/${url}?ref=${ref}` },
+  ];
 }

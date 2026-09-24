@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { useVigil } from "@/lib/store";
 import { countdown, shortAddr, usd } from "@/lib/format";
-import { isMobile, type ProviderName } from "@/lib/wallet";
+import { isMobile, mobileWallets } from "@/lib/wallet";
 import { Btn, Dot } from "./ui";
 
 export default function TopBar() {
   const clock = useVigil((s) => s.clock);
   const address = useVigil((s) => s.address);
   const demo = useVigil((s) => s.demo);
-  const providers = useVigil((s) => s.providers);
+  const wallets = useVigil((s) => s.wallets);
   const connect = useVigil((s) => s.connect);
   const disconnect = useVigil((s) => s.disconnect);
   const enterDemo = useVigil((s) => s.enterDemo);
@@ -103,30 +103,47 @@ export default function TopBar() {
               ) : (
               <>
               <div className="px-2 py-1.5">
-                <div className="eyebrow">Connect a wallet</div>
+                <div className="eyebrow">
+                  {wallets.length > 0 ? `Solana wallets · ${wallets.length} found` : "Connect a wallet"}
+                </div>
               </div>
-              {(["Phantom", "Solflare", "Backpack"] as ProviderName[]).map((p) => {
-                const has = providers.includes(p);
-                const mobile = isMobile();
-                // on mobile, tapping deep-links into the wallet's browser
-                const tappable = has || mobile;
-                return (
-                  <button
-                    key={p}
-                    disabled={!tappable}
-                    onClick={() => {
-                      connect(p);
-                      setOpen(false);
-                    }}
-                    className="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-[14px] text-text hover:bg-bg-inset disabled:opacity-40"
-                  >
-                    <span>{p}</span>
-                    <span className="mono text-[11px] text-text-3">
-                      {has ? "detected" : mobile ? "open app" : "not found"}
-                    </span>
-                  </button>
-                );
-              })}
+              <div className="max-h-64 overflow-y-auto">
+                {wallets.length > 0 ? (
+                  wallets.map((w) => (
+                    <button
+                      key={w.name}
+                      onClick={() => {
+                        connect(w.name);
+                        setOpen(false);
+                      }}
+                      className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[14px] text-text hover:bg-bg-inset"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={w.icon} alt="" className="h-5 w-5 flex-none rounded" />
+                      <span className="flex-1 text-left">{w.name}</span>
+                      <span className="mono text-[10px] text-text-3">detected</span>
+                    </button>
+                  ))
+                ) : isMobile() ? (
+                  mobileWallets().map((m) => (
+                    <button
+                      key={m.name}
+                      onClick={() => {
+                        window.location.href = m.link;
+                      }}
+                      className="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-[14px] text-text hover:bg-bg-inset"
+                    >
+                      <span>{m.name}</span>
+                      <span className="mono text-[11px] text-text-3">open app</span>
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-2.5 py-2 text-[12px] leading-relaxed text-text-3">
+                    No Solana wallet detected. Install Phantom, Solflare, Backpack, or any Solana
+                    wallet, then reopen this menu.
+                  </div>
+                )}
+              </div>
               <div className="my-1 h-px bg-line" />
               <button
                 onClick={() => {

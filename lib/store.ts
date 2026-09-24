@@ -6,12 +6,10 @@ import { evalRule, bumpPeak, genId, isSell } from "./rules";
 import {
   connectWallet,
   disconnectWallet,
-  detectProviders,
+  getSolanaWallets,
+  onWalletsChange,
   signAndSend,
-  isMobile,
-  walletDeepLink,
-  getProvider,
-  type ProviderName,
+  type SolWallet,
 } from "./wallet";
 import { BY_SYMBOL, USDC, SOL_MINT } from "./tokens";
 
@@ -90,8 +88,8 @@ function saveRules(rules: Rule[]) {
 type State = {
   // wallet
   address: string | null;
-  walletName: ProviderName | null;
-  providers: ProviderName[];
+  walletName: string | null;
+  wallets: SolWallet[];
   demo: boolean;
   demoDirty: boolean; // a simulated fill has altered the demo portfolio
   busy: string | null;
@@ -128,7 +126,7 @@ type State = {
   enterDemo: () => void;
   resetDemo: () => void;
   toggleNightWatch: () => void;
-  connect: (name: ProviderName) => Promise<void>;
+  connect: (name: string) => Promise<void>;
   disconnect: () => Promise<void>;
 
   addRule: (r: Partial<Rule> & { kind: RuleKind; symbol: string }) => Rule;
@@ -163,7 +161,7 @@ async function getJSON<T>(url: string, init?: RequestInit): Promise<T> {
 export const useVigil = create<State>((set, get) => ({
   address: null,
   walletName: null,
-  providers: [],
+  wallets: [],
   demo: false,
   demoDirty: false,
   busy: null,
@@ -206,7 +204,9 @@ export const useVigil = create<State>((set, get) => ({
         /* ignore */
       }
     }
-    set({ providers: detectProviders(), rules: loadRules(), nightWatch });
+    set({ wallets: getSolanaWallets(), rules: loadRules(), nightWatch });
+    // wallets can register a beat after load; keep the list fresh
+    onWalletsChange(() => set({ wallets: getSolanaWallets() }));
     get().refreshClock();
     get().refreshQuotes();
     get().refreshPortfolio();
@@ -301,15 +301,6 @@ export const useVigil = create<State>((set, get) => ({
   },
 
   connect: async (name) => {
-    // On mobile with no injected provider, hop into the wallet's in-app browser.
-    if (!getProvider(name) && isMobile()) {
-      const link = walletDeepLink(name);
-      if (link) {
-        get().log({ level: "info", text: `Opening ${name}…`, sub: "continue in the wallet browser" });
-        window.location.href = link;
-        return;
-      }
-    }
     set({ busy: "connect" });
     try {
       const address = await connectWallet(name);
@@ -324,8 +315,7 @@ export const useVigil = create<State>((set, get) => ({
   },
 
   disconnect: async () => {
-    const { walletName } = get();
-    if (walletName) await disconnectWallet(walletName);
+    await disconnectWallet();
     set({ address: null, walletName: null });
   },
 
@@ -409,7 +399,7 @@ export const useVigil = create<State>((set, get) => ({
       // The wallet signs and broadcasts the create-order transaction directly.
       // That lands the order account on-chain; the Jupiter keeper takes it from
       // there. Vigil never holds keys and never holds funds.
-      const signature = await signAndSend(walletName, created.transaction);
+      const signature = await signAndSend(created.transaction);
       const rules = get().rules.map((r) => (r.id === id ? { ...r, orderRef: created.order, mode: "guard" as const } : r));
       set({
         rules,
@@ -478,7 +468,7 @@ export const useVigil = create<State>((set, get) => ({
           userPublicKey: address,
         }),
       });
-      const signature = await signAndSend(walletName, res.swapTransaction);
+      const signature = await signAndSend(res.swapTransaction);
       const rules = get().rules.map((r) => (r.id === id ? { ...r, status: "triggered" as const, lastFiredAt: Date.now() } : r));
       set({ rules, busy: null });
       saveRules(rules);
@@ -577,7 +567,7 @@ export const useVigil = create<State>((set, get) => ({
           userPublicKey: address,
         }),
       });
-      const signature = await signAndSend(walletName, res.swapTransaction);
+      const signature = await signAndSend(res.swapTransaction);
       const verb = sell ? "Sell" : "Buy";
       // Optimistic: it is signed and broadcast. Confirmation follows below.
       set({
@@ -629,7 +619,7 @@ export const useVigil = create<State>((set, get) => ({
           body: JSON.stringify({ owner: address, symbol, capUnits: cap }),
         },
       );
-      const signature = await signAndSend(walletName, res.transaction);
+      const signature = await signAndSend(res.transaction);
       set({ delegations: Array.from(new Set([...get().delegations, symbol.toUpperCase()])), busy: null });
       get().log({
         level: "chain",
@@ -654,7 +644,7 @@ export const useVigil = create<State>((set, get) => ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ owner: address, symbol }),
       });
-      const signature = await signAndSend(walletName, res.transaction);
+      const signature = await signAndSend(res.transaction);
       set({
         delegations: get().delegations.filter((s) => s !== symbol.toUpperCase()),
         busy: null,
