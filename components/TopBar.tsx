@@ -14,8 +14,15 @@ export default function TopBar() {
   const connect = useVigil((s) => s.connect);
   const disconnect = useVigil((s) => s.disconnect);
   const enterDemo = useVigil((s) => s.enterDemo);
+  const refreshWallets = useVigil((s) => s.refreshWallets);
   const protectedTotal = useVigil((s) => s.protectedTotal);
   const [open, setOpen] = useState(false);
+
+  // rescan installed wallets each time the menu opens (some register late)
+  const toggleMenu = () => {
+    refreshWallets();
+    setOpen((o) => !o);
+  };
 
   const nyseOpen = clock?.nyseOpen ?? false;
   const secsToOpen = clock?.nextOpen ? Math.max(0, clock.nextOpen - Math.floor(Date.now() / 1000)) : null;
@@ -58,7 +65,7 @@ export default function TopBar() {
         {/* wallet */}
         <div className="relative">
           {address ? (
-            <Btn size="sm" tone="ghost" onClick={() => setOpen((o) => !o)}>
+            <Btn size="sm" tone="ghost" onClick={toggleMenu}>
               <Dot state="live" />
               <span className="mono">{shortAddr(address)}</span>
               <span className="text-text-4">▾</span>
@@ -66,12 +73,12 @@ export default function TopBar() {
           ) : demo ? (
             <div className="flex items-center gap-2">
               <span className="mono text-[12px] text-amber">demo mode</span>
-              <Btn size="sm" onClick={() => setOpen((o) => !o)}>
+              <Btn size="sm" onClick={toggleMenu}>
                 Connect
               </Btn>
             </div>
           ) : (
-            <Btn size="sm" tone="live" onClick={() => setOpen((o) => !o)}>
+            <Btn size="sm" tone="live" onClick={toggleMenu}>
               Connect / Demo
             </Btn>
           )}
@@ -155,6 +162,12 @@ export default function TopBar() {
                 <span>Explore with demo wallet</span>
                 <span className="mono text-[11px] text-live/70">no wallet needed</span>
               </button>
+              <div className="px-2.5 pt-1.5 text-[11px] leading-relaxed text-text-4">
+                Don&rsquo;t see your wallet? Get{" "}
+                <a href="https://phantom.app/download" target="_blank" rel="noreferrer" className="text-text-3 underline hover:text-text">Phantom</a>,{" "}
+                <a href="https://solflare.com/download" target="_blank" rel="noreferrer" className="text-text-3 underline hover:text-text">Solflare</a>, or{" "}
+                <a href="https://backpack.app/downloads" target="_blank" rel="noreferrer" className="text-text-3 underline hover:text-text">Backpack</a>.
+              </div>
               <div className="mt-1 rounded-lg border border-line bg-bg-sunken px-2.5 py-2">
                 <div className="text-[12px] leading-relaxed text-text-3">
                   Connecting only shares your public address. Vigil cannot move funds or sign anything

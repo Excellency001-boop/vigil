@@ -126,6 +126,7 @@ type State = {
   enterDemo: () => void;
   resetDemo: () => void;
   toggleNightWatch: () => void;
+  refreshWallets: () => void;
   connect: (name: string) => Promise<void>;
   disconnect: () => Promise<void>;
 
@@ -205,12 +206,16 @@ export const useVigil = create<State>((set, get) => ({
       }
     }
     set({ wallets: getSolanaWallets(), rules: loadRules(), nightWatch });
-    // wallets can register a beat after load; keep the list fresh
+    // wallets can register a beat after load; keep the list fresh via the
+    // standard event and a few rescans (some wallets inject up to ~2s late).
     onWalletsChange(() => set({ wallets: getSolanaWallets() }));
+    [400, 1200, 2500].forEach((ms) => setTimeout(() => set({ wallets: getSolanaWallets() }), ms));
     get().refreshClock();
     get().refreshQuotes();
     get().refreshPortfolio();
   },
+
+  refreshWallets: () => set({ wallets: getSolanaWallets() }),
 
   refreshClock: async () => {
     try {
