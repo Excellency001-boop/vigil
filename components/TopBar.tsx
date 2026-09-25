@@ -138,9 +138,11 @@ export default function TopBar() {
                       onClick={() => {
                         window.location.href = m.link;
                       }}
-                      className="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-[14px] text-text hover:bg-bg-inset"
+                      className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[14px] text-text hover:bg-bg-inset"
                     >
-                      <span>{m.name}</span>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={m.icon} alt="" className="h-5 w-5 flex-none rounded" />
+                      <span className="flex-1 text-left">{m.name}</span>
                       <span className="mono text-[11px] text-text-3">open app</span>
                     </button>
                   ))

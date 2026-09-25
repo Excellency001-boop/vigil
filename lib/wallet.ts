@@ -103,14 +103,24 @@ export function isMobile(): boolean {
   return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 }
 
+// Brand-colored icons for the mobile picker (phones cannot enumerate installed
+// wallets, so these are curated "tap to open" options, each with its mark).
+const PHANTOM_SVG =
+  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='11' fill='#AB9FF2'/><path fill='#fff' d='M13 27.5V19a7 7 0 0 1 14 0v8.5l-2.4-2.1-2.3 2.1-2.3-2.1-2.3 2.1-2.4-2.1z'/><circle cx='17' cy='19.5' r='1.7' fill='#534BB1'/><circle cx='23' cy='19.5' r='1.7' fill='#534BB1'/></svg>";
+const SOLFLARE_SVG =
+  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='11' fill='#FE7644'/><circle cx='20' cy='20' r='6' fill='#FFD15C'/><g stroke='#FFD15C' stroke-width='2.6' stroke-linecap='round'><path d='M20 7v3.5M20 29.5V33M7 20h3.5M29.5 20H33M11 11l2.4 2.4M26.6 26.6 29 29M29 11l-2.4 2.4M13.4 26.6 11 29'/></g></svg>";
+const dataUri = (svg: string) => `data:image/svg+xml,${encodeURIComponent(svg)}`;
+
+export type MobileWallet = { name: string; link: string; icon: string };
+
 // On a phone's normal browser no wallet is injected; these universal links open
 // the dapp inside the wallet's own browser where it does register.
-export function mobileWallets(): { name: string; link: string }[] {
+export function mobileWallets(): MobileWallet[] {
   if (typeof window === "undefined") return [];
   const url = encodeURIComponent(window.location.href);
   const ref = encodeURIComponent(window.location.origin);
   return [
-    { name: "Phantom", link: `https://phantom.app/ul/browse/${url}?ref=${ref}` },
-    { name: "Solflare", link: `https://solflare.com/ul/v1/browse/${url}?ref=${ref}` },
+    { name: "Phantom", link: `https://phantom.app/ul/browse/${url}?ref=${ref}`, icon: dataUri(PHANTOM_SVG) },
+    { name: "Solflare", link: `https://solflare.com/ul/v1/browse/${url}?ref=${ref}`, icon: dataUri(SOLFLARE_SVG) },
   ];
 }
