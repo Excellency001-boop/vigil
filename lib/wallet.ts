@@ -30,8 +30,13 @@ function rawWallets(): any[] {
   }
 }
 
+// Names hidden from the desktop list (offered on mobile via deep link instead).
+const DESKTOP_HIDE = new Set(["solflare"]);
+
 export function getSolanaWallets(): SolWallet[] {
-  return rawWallets().map((w) => ({ name: w.name, icon: w.icon }));
+  const list = rawWallets().map((w) => ({ name: w.name, icon: w.icon }));
+  if (isMobile()) return list;
+  return list.filter((w) => !DESKTOP_HIDE.has(w.name.trim().toLowerCase()));
 }
 
 // Wallets can register a moment after load; re-read when the registry changes.
